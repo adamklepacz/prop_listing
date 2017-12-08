@@ -14,7 +14,7 @@ class App extends React.Component {
     }
   }
   render(){
-    const {properties} = this.state;
+    const {properties, activeProperty} = this.state;
     return (
       <div>
         {/* listings - Start */}
@@ -99,8 +99,12 @@ class App extends React.Component {
             <div className="cards-list row ">
 
               {
-                properties.map((property, index) => {
-                  return <Card key={index} property={property}/>
+                properties.map(property => {
+                  return <Card
+                    key={property._id}
+                    property={property}
+                    activeProperty={activeProperty}
+                  />
                 })
               }
             </div>
