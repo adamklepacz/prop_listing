@@ -1,6 +1,7 @@
 import React from 'react';
 import image from '../images/house-location-pin.svg';
 import data from './data/Data.js';
+import Card from './Card.js';
 
 class App extends React.Component {
 
@@ -13,7 +14,7 @@ class App extends React.Component {
     }
   }
   render(){
-    const 
+    const {properties} = this.state;
     return (
       <div>
         {/* listings - Start */}
@@ -96,7 +97,12 @@ class App extends React.Component {
 
           <div className="cards container">
             <div className="cards-list row ">
-              <Card  property={property}/>
+
+              {
+                properties.map((property, index) => {
+                  return <Card key={index} property={property}/>
+                })
+              }
             </div>
           </div>
         </div>
