@@ -2,6 +2,7 @@ import React from 'react';
 import image from '../images/house-location-pin.svg';
 import data from './data/Data.js';
 import Card from './Card.js';
+import GoogleMap from './GoogleMap.js';
 
 class App extends React.Component {
 
@@ -113,9 +114,7 @@ class App extends React.Component {
         {/* listings - End */}
 
         {/* mapContainer - Start */}
-        <div className="mapContainer">
-          <div id="map"></div>
-        </div>
+        <GoogleMap properites={properties}/>
         {/* mapContainer - End */}
       </div>
     )
