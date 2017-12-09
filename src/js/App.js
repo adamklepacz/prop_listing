@@ -3,6 +3,8 @@ import image from '../images/house-location-pin.svg';
 import data from './data/Data.js';
 import Card from './Card.js';
 import GoogleMap from './GoogleMap.js';
+import jump from 'jump.js';
+import easeInOutCubic from './utils/Easing.js';
 
 class App extends React.Component {
 
@@ -11,15 +13,28 @@ class App extends React.Component {
 
     this.state = {
       properties: data.properties,
-      activeProperty: data.properties[0]
+      activeProperty: data.properties[5]
     }
 
     this.setActiveProperty = this.setActiveProperty.bind(this);
   }
 
   setActiveProperty(property) {
+    const {index} = property;
+
     this.setState({
       activeProperty: property
+    })
+
+
+    //scroll to the right property
+    const target = `#card-${index}`
+    jump(target, {
+      duration: 1000,
+      offset: 0,
+      callback: undefined,
+      easing: easeInOutCubic,
+      a11y: false
     })
   }
 
