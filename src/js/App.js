@@ -19,23 +19,26 @@ class App extends React.Component {
     this.setActiveProperty = this.setActiveProperty.bind(this);
   }
 
-  setActiveProperty(property) {
+  setActiveProperty(property, scroll) {
     const {index} = property;
 
     this.setState({
       activeProperty: property
     })
 
-
-    //scroll to the right property
-    const target = `#card-${index}`
-    jump(target, {
-      duration: 1000,
-      offset: 0,
-      callback: undefined,
-      easing: easeInOutCubic,
-      a11y: false
-    })
+    //if clicked on marker scroll to item
+    //if clicked on a right side list do not scroll
+    if(scroll) {
+      //scroll to the right property
+      const target = `#card-${index}`
+      jump(target, {
+        duration: 1000,
+        offset: 0,
+        callback: undefined,
+        easing: easeInOutCubic,
+        a11y: false
+      })
+    }
   }
 
   render(){
@@ -130,6 +133,7 @@ class App extends React.Component {
                     key={property._id}
                     property={property}
                     activeProperty={activeProperty}
+                    setActiveProperty={this.setActiveProperty}
                   />
                 })
               }

@@ -10,6 +10,19 @@ class GoogleMap extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const {activeProperty} = nextProps;
+    const {index} = activeProperty;
+
+    const {markers} = this.state;
+
+    //hide all the info window poupups
+    this.hideAllIW();
+
+    //show the current active property marker
+    this.showIW(index);
+  }
+
   componentDidMount() {
     const {properties, activeProperty} = this.props;
     const {latitude, longitude} = activeProperty;
@@ -23,6 +36,20 @@ class GoogleMap extends React.Component {
     this.createMarkers(properties);
   }
 
+  showIW(index) {
+    const {markers} = this.state;
+
+    markers[index] &&  markers[index].iw.open(this.map, markers[index]);
+  }
+
+  hideAllIW() {
+    const {markers} = this.state;
+
+    markers.forEach(marker => {
+      marker.iw.close();
+    });
+  }
+
   createMarkers(properties) {
     const {setActiveProperty, activeProperty} = this.props;
     const activePropertyIndex = activeProperty.index;
@@ -31,6 +58,7 @@ class GoogleMap extends React.Component {
     properties.map(property => {
       const {latitude, longitude, index, address} = property;
 
+      //create a new marker
       this.marker = new google.maps.Marker({
         position: {lat: latitude, lng:  longitude},
         map: this.map,
@@ -46,8 +74,6 @@ class GoogleMap extends React.Component {
           // The anchor for this image is the base of the flagpole at (0, 32).
           anchor: new google.maps.Point(11, 52)
         }
-
-
       });
 
       //create info window for every marker
@@ -58,23 +84,21 @@ class GoogleMap extends React.Component {
       this.marker.iw = iw;
 
       this.marker.addListener('click', function() {
-        //close all the info window poupups
 
-        markers.forEach(marker => {
-          marker.iw.close();
-        })
+        //close all the info window poupups
+        this.hideAllIW();
 
         //set active property into the state
-        setActiveProperty(property);
-      })
+        setActiveProperty(property, true);
+      }.bind(this));
 
       //push this marker to markers array on the state
       markers.push(this.marker);
 
       //open info window for active Property
-      markers[activePropertyIndex] &&  markers[activePropertyIndex].iw.open(this.map, markers[activePropertyIndex]);
+      this.showIW(activePropertyIndex);
 
-    })
+    });
   }
 
   render() {
