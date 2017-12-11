@@ -24,7 +24,7 @@ class GoogleMap extends React.Component {
   }
 
   componentDidMount() {
-    const {properties, activeProperty} = this.props;
+    const {properties, activeProperty, filteredProperites, isFiltering} = this.props;
     const {latitude, longitude} = activeProperty;
 
     this.map = new google.maps.Map(this.refs.map, {
@@ -34,6 +34,29 @@ class GoogleMap extends React.Component {
     });
 
     this.createMarkers(properties);
+  }
+
+  componentDidUpdate() {
+    const {filteredProperties, isFiltering}  = this.props;
+    const {markers} = this.state;
+    console.log(markers);
+
+    markers.forEach(marker => {
+      const {property} = marker; //what is te associated property
+
+      if(isFiltering) {
+        //show markers of filtered properties and hide all the other markers
+        if(filteredProperties.includes(property)) {
+          markers[property.index].setVisible(true);
+        } else {
+          //hide all other markes
+          markers[property.index].setVisible(false);
+        }
+      } else {
+        //show other markers
+        markers[property.index].setVisible(true);
+      }
+    })
   }
 
   showIW(index) {
@@ -73,7 +96,8 @@ class GoogleMap extends React.Component {
           origin: new google.maps.Point(0, -15),
           // The anchor for this image is the base of the flagpole at (0, 32).
           anchor: new google.maps.Point(11, 52)
-        }
+        },
+        property
       });
 
       //create info window for every marker
@@ -112,7 +136,10 @@ class GoogleMap extends React.Component {
 
 GoogleMap.PropTypes = {
   properties: PropTypes.array.isRequried,
-  setActiveProperty: PropTypes.func.isRequried
+  setActiveProperty: PropTypes.func.isRequried,
+  activeProperty: PropTypes.object.isRequired,
+  filteredProperites: PropTypes.array,
+  isFiltering: PropTypes.bool.isRequired 
 }
 
 export default GoogleMap;

@@ -1,10 +1,10 @@
 import React from 'react';
-import data from './data/Data.js';
-import Card from './Card.js';
-import Header from './Header.js';
-import GoogleMap from './GoogleMap.js';
+import data from './data/Data';
+import Card from './Card';
+import Header from './Header';
+import GoogleMap from './GoogleMap';
 import jump from 'jump.js';
-import easeInOutCubic from './utils/Easing.js';
+import easeInOutCubic from './utils/Easing';
 
 class App extends React.Component {
 
@@ -14,11 +14,54 @@ class App extends React.Component {
     this.state = {
       properties: data.properties,
       activeProperty: data.properties[5],
-      filterIsVisible: false
+      filterIsVisible: false,
+      filterBedrooms: 'any',
+      filteredProperties: [],
+      isFiltering: false
     }
 
     this.setActiveProperty = this.setActiveProperty.bind(this);
     this.toggleFilter = this.toggleFilter.bind(this);
+    this.handleFilterChange = this.handleFilterChange.bind(this);
+    this.filterProperties = this.filterProperties.bind(this);
+  }
+
+  handleFilterChange(e) {
+    const target = e.target;
+    const {value, name} = target;
+    console.log(value,name);
+
+    this.setState({
+      [name]: value
+    }, () => {
+      this.filterProperties();
+    })
+  }
+
+  filterProperties() {
+    const {properties, filterBedrooms} = this.state;
+    const isFiltering = filterBedrooms !== 'any';
+    
+    const getFilteredProperties = (properties) => {
+			const filteredProperties = [];
+			
+   		properties.map(property => {
+				 const {bedrooms} = property; //get bedrooms count
+				 const match = bedrooms === parseInt(filterBedrooms) || filterBedrooms === 'any';
+
+				 //if bedrooms count in current property equals filterBedroom count from select
+				 //dropdown then add current property to filteredProperties array
+				 match && filteredProperties.push(property);
+			 });
+
+			 return filteredProperties;
+  	}
+
+		this.setState({
+			filteredProperties: getFilteredProperties(properties),
+			activeProperty: getFilteredProperties(properties)[0],
+			isFiltering
+		})
   }
 
   toggleFilter(e) {
@@ -54,7 +97,8 @@ class App extends React.Component {
   }
 
   render(){
-    const {properties, activeProperty, filterIsVisible} = this.state;
+    const {properties, activeProperty, filterIsVisible, filteredProperties, isFiltering} = this.state;
+		const propertiesList = isFiltering ? filteredProperties : properties;
 
     return (
       <div>
@@ -65,6 +109,7 @@ class App extends React.Component {
             <Header
               filterIsVisible={filterIsVisible}
               toggleFilter={this.toggleFilter}
+              handleFilterChange={this.handleFilterChange}
             />
           {/* Header - End */}
 
@@ -72,12 +117,12 @@ class App extends React.Component {
             <div className="cards-list row ">
 
               {
-                properties.map(property => {
+                propertiesList.map(property => {
                   return <Card
                     key={property._id}
                     property={property}
                     activeProperty={activeProperty}
-                    setActiveProperty={this.setActiveProperty}
+										setActiveProperty={this.setActiveProperty}
                   />
                 })
               }
@@ -90,7 +135,9 @@ class App extends React.Component {
         <GoogleMap
           properties={properties}
           activeProperty={activeProperty}
-          setActiveProperty={this.setActiveProperty}
+					setActiveProperty={this.setActiveProperty}
+					filteredProperties={filteredProperties}
+					isFiltering={isFiltering}
         />
         {/* mapContainer - End */}
       </div>
