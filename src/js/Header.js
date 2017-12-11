@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import image from '../images/house-location-pin.svg';
 import Filter from './Filter.js';
 
-const Header = ({filterIsVisible, toggleFilter, handleFilterChange}) => {
+const Header = ({filterIsVisible, toggleFilter, handleFilterChange, clearFilter}) => {
   return (
     <header className={`${filterIsVisible ? 'filter-is-visible' : ''}`}>
 
@@ -11,6 +11,7 @@ const Header = ({filterIsVisible, toggleFilter, handleFilterChange}) => {
       <Filter
         toggleFilter={toggleFilter}
         handleFilterChange={handleFilterChange}
+        clearFilter={clearFilter}
       />
       {/* Filter - End */}
 
@@ -24,6 +25,7 @@ const Header = ({filterIsVisible, toggleFilter, handleFilterChange}) => {
 Header.PropTypes = {
   filterIsVisible: PropTypes.bool.isRequried,
   toggleFilter: PropTypes.func.isRequried,
+  clearFilter: PropTypes.func.isRequired,
   handleFilterChange: PropTypes.func.isRequired
 }
 

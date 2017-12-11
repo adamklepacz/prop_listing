@@ -25,7 +25,8 @@ class App extends React.Component {
     this.setActiveProperty = this.setActiveProperty.bind(this);
     this.toggleFilter = this.toggleFilter.bind(this);
     this.handleFilterChange = this.handleFilterChange.bind(this);
-    this.filterProperties = this.filterProperties.bind(this);
+		this.filterProperties = this.filterProperties.bind(this);
+		this.clearFilter = this.clearFilter.bind(this);
   }
 
   handleFilterChange(e) {
@@ -38,7 +39,21 @@ class App extends React.Component {
     }, () => {
       this.filterProperties();
     })
-  }
+	}
+	
+	clearFilter(e, form) {
+		e.preventDefault();
+
+		this.setState({
+			filterBathrooms: 'any', 
+			filterBedrooms: 'any',
+			filterCars: 'any',
+			isFiltering: !this.state.isFiltering,
+			activeProperty: this.state.properties[0]
+		})
+
+		form.reset();
+	}
 
   filterProperties() {
     const {properties, filterBedrooms, filterBathrooms, filterCars} = this.state;
@@ -114,7 +129,8 @@ class App extends React.Component {
             <Header
               filterIsVisible={filterIsVisible}
               toggleFilter={this.toggleFilter}
-              handleFilterChange={this.handleFilterChange}
+							handleFilterChange={this.handleFilterChange}
+							clearFilter={this.clearFilter}
             />
           {/* Header - End */}
 
