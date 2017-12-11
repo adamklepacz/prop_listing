@@ -51,7 +51,7 @@ class App extends React.Component {
 			isFiltering: !this.state.isFiltering,
 			activeProperty: this.state.properties[0]
 		})
-
+		//reset form
 		form.reset();
 	}
 
