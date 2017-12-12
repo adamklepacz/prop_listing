@@ -61,25 +61,39 @@ class App extends React.Component {
 	}
 
   filterProperties() {
-    const {properties, filterBedrooms, filterBathrooms, filterCars} = this.state;
-    const isFiltering = filterBedrooms !== 'any' || filterBathrooms !== 'any' || filterCars !== 'any';
+    const {properties, filterBedrooms, filterBathrooms, filterCars, filterSort} = this.state;
+    const isFiltering = 
+      filterBedrooms !== 'any' || 
+      filterBathrooms !== 'any' || 
+      filterCars !== 'any' || 
+      filterSort !== 'any';
     
     const getFilteredProperties = (properties) => {
 			const filteredProperties = [];
 			
    		properties.map(property => {
-				const { bedrooms, bathrooms, carSpaces	} = property; //get count of bathroom, bedrooms etc.
-				const match = 
+			  const { bedrooms, bathrooms, carSpaces	} =  property; //get count of bathroom, bedrooms etc.
+			  const match = 
 					(bedrooms === parseInt(filterBedrooms) || filterBedrooms === 'any') &&
 					(bathrooms === parseInt(filterBathrooms) || filterBathrooms === 'any') &&
 					(carSpaces === parseInt(filterCars) || filterCars === 'any');
 
 				//if bedrooms count in current property equals filterBedroom count from select
 				//dropdown then add current property to filteredProperties array
-				match && filteredProperties.push(property);
-			 });
+			  match && filteredProperties.push(property);
+			});
 
-			 return filteredProperties;
+      //sorting the properties by price
+      switch (filterSort) {
+        case '0':
+          filteredProperties.sort((a,b) => a.price - b.price);
+          break;
+        case '1': 
+          filteredProperties.sort((a,b) => b.price - a.price);
+          break;
+      }
+
+		  return filteredProperties;
   	}
 
 		this.setState({
@@ -124,10 +138,6 @@ class App extends React.Component {
   render(){
     const {properties, activeProperty, filterIsVisible, filteredProperties, isFiltering, filterSort} = this.state;
 		const propertiesList = isFiltering ? filteredProperties : properties;
-
-    //sorting the properties
-    parseInt(filterSort) === 0 && propertiesList.sort((a, b) => a.price - b.price);
-    parseInt(filterSort) === 1 && propertiesList.sort((a, b) => b.price - a.price);
 
     return (
       <div>
