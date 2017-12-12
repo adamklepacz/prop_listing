@@ -5,6 +5,7 @@ import Header from './Header';
 import GoogleMap from './GoogleMap';
 import jump from 'jump.js';
 import easeInOutCubic from './utils/Easing';
+import image from '../images/location-map.svg';
 
 class App extends React.Component {
 
@@ -17,7 +18,8 @@ class App extends React.Component {
       filterIsVisible: false,
 			filterBedrooms: 'any',
 			filterBathrooms: 'any',
-			filterCars: 'any',
+      filterCars: 'any',
+      filterSort: 'any',
       filteredProperties: [],
       isFiltering: false
     }
@@ -45,10 +47,13 @@ class App extends React.Component {
 		e.preventDefault();
 
 		this.setState({
+      properties: this.state.properties.sort((a,b) => a.index - b.index),
+      filteredProperties: [],
 			filterBathrooms: 'any', 
 			filterBedrooms: 'any',
-			filterCars: 'any',
-			isFiltering: !this.state.isFiltering,
+      filterCars: 'any',
+      filterSort: 'any',
+			isFiltering: false,
 			activeProperty: this.state.properties[0]
 		})
 		//reset form
@@ -79,7 +84,7 @@ class App extends React.Component {
 
 		this.setState({
 			filteredProperties: getFilteredProperties(properties),
-			activeProperty: getFilteredProperties(properties)[0],
+			activeProperty: getFilteredProperties(properties)[0] || properties[0],
 			isFiltering
 		})
   }
@@ -117,8 +122,12 @@ class App extends React.Component {
   }
 
   render(){
-    const {properties, activeProperty, filterIsVisible, filteredProperties, isFiltering} = this.state;
+    const {properties, activeProperty, filterIsVisible, filteredProperties, isFiltering, filterSort} = this.state;
 		const propertiesList = isFiltering ? filteredProperties : properties;
+
+    //sorting the properties
+    parseInt(filterSort) === 0 && propertiesList.sort((a, b) => a.price - b.price);
+    parseInt(filterSort) === 1 && propertiesList.sort((a, b) => b.price - a.price);
 
     return (
       <div>
@@ -135,7 +144,7 @@ class App extends React.Component {
           {/* Header - End */}
 
           <div className="cards container">
-            <div className="cards-list row ">
+            <div className={`cards-list row ${propertiesList.length === 0 ? 'is-empty' : ''}`} >
 
               {
                 propertiesList.map(property => {
@@ -146,6 +155,11 @@ class App extends React.Component {
 										setActiveProperty={this.setActiveProperty}
                   />
                 })
+              }
+              {
+                (isFiltering && propertiesList.length === 0) && <p className="warning">
+                <img src={image}  />  <br/>
+                No properties were found.</p>
               }
             </div>
           </div>

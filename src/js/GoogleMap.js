@@ -11,16 +11,18 @@ class GoogleMap extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {activeProperty} = nextProps;
+    const {activeProperty, filteredProperties, isFiltering} = nextProps;
     const {index} = activeProperty;
 
     const {markers} = this.state;
 
-    //hide all the info window poupups
-    this.hideAllIW();
-
-    //show the current active property marker
-    this.showIW(index);
+    if(isFiltering && filteredProperties.length === 0) {
+      this.hideAllIW();
+    } else {
+      this.hideAllIW();
+      //show info of a new active property
+      this.showIW(index);
+    }
   }
 
   componentDidMount() {
