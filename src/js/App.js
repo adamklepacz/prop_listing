@@ -20,6 +20,8 @@ class App extends React.Component {
 			filterBathrooms: 'any',
       filterCars: 'any',
       filterSort: 'any',
+      priceFrom: '0',
+      priceTo: '1000001',
       filteredProperties: [],
       isFiltering: false
     }
@@ -53,6 +55,8 @@ class App extends React.Component {
 			filterBedrooms: 'any',
       filterCars: 'any',
       filterSort: 'any',
+      priceFrom: '0',
+      priceTo: '1000001',
 			isFiltering: false,
 			activeProperty: this.state.properties[0]
 		})
@@ -61,22 +65,26 @@ class App extends React.Component {
 	}
 
   filterProperties() {
-    const {properties, filterBedrooms, filterBathrooms, filterCars, filterSort} = this.state;
+    const {properties, filterBedrooms, filterBathrooms, filterCars, filterSort, priceFrom, priceTo} = this.state;
     const isFiltering = 
       filterBedrooms !== 'any' || 
       filterBathrooms !== 'any' || 
       filterCars !== 'any' || 
-      filterSort !== 'any';
+      filterSort !== 'any' ||
+      priceFrom !== '0' ||
+      priceTo !== '1000001';
     
     const getFilteredProperties = (properties) => {
 			const filteredProperties = [];
 			
    		properties.map(property => {
-			  const { bedrooms, bathrooms, carSpaces	} =  property; //get count of bathroom, bedrooms etc.
+			  const { bedrooms, bathrooms, carSpaces, price	} =  property; //get count of bathroom, bedrooms etc.
 			  const match = 
 					(bedrooms === parseInt(filterBedrooms) || filterBedrooms === 'any') &&
 					(bathrooms === parseInt(filterBathrooms) || filterBathrooms === 'any') &&
-					(carSpaces === parseInt(filterCars) || filterCars === 'any');
+          (carSpaces === parseInt(filterCars) || filterCars === 'any') &&
+          (price >= parseInt(priceFrom) || priceFrom === '0') && 
+          (price <= parseInt(priceTo) || priceTo === '1000001');
 
 				//if bedrooms count in current property equals filterBedroom count from select
 				//dropdown then add current property to filteredProperties array
