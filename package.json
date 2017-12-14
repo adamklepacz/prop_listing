@@ -1,15 +1,16 @@
 {
   "name": "webpack-starter",
   "version": "1.0.0",
+  "homepage": "https://adamklepacz.github.io/prop_listing",
   "description": "Webpack project starter.",
   "main": "index.js",
   "scripts": {
+    "deploy": "npm run build && gh-pages -d build",
     "dev": "node_modules/.bin/webpack-dev-server -d --env.development",
     "clean": "rimraf dist/*",
     "prod": "npm run clean && webpack -p --env.production",
-    "deploy": "npm run prod&&gh-pages -d dist"
+    "build": "npm build ."
   },
-  "homepage": "https://github.com/adamklepacz/prop_listing",
   "author": "Petr Tichy",
   "license": "ISC",
   "devDependencies": {
