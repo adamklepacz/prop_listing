@@ -6,7 +6,11 @@ const Card = ({ property, activeProperty, setActiveProperty }) => {
   const { price, address, city, index, bathrooms: numberOfBathrooms, bedrooms: numberOfBedrooms, carSpaces, picture } = property;
 
   return (
-    <div id={`card-${index}`} className={`card col-sm-12 col-md-6 col-lg-4 ${property === activeProperty ? 'is-active' : ''}`} onClick={() => setActiveProperty(property, false) }>
+    <div
+      id={`card-${index}`}
+      className={`card col-sm-12 col-md-6 col-lg-4 ${property === activeProperty ? 'is-active' : ''}`}
+      onClick={() => setActiveProperty(property, false)}
+    >
       <img src={picture} alt={city} />
       <p className="price">{priceFormatter(price)}</p>
       <div className="details">
